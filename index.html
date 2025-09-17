@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Book a Estimate | Team Cleaner SF</title>
+  <meta name="google-site-verification" content="5bkdZx8c0WWp5zHPyiGdyiaMf-XEzJAYNngwaJND_7A" />
+  <link rel="icon" href="Untitled design 2.png" />
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    header {
+      background: #007BFF;
+      color: white;
+      padding: 1.2rem 2rem;
+      text-align: center;
+    }
+    header h1 { font-size: 2rem; }
+    header p { font-size: 1.1rem; margin-top: 0.3rem; }
+
+    /* Booking Section */
+    .booking-container {
+      max-width: 900px;
+      margin: 2rem auto;
+      background: white;
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+    }
+    .booking-container h2 {
+      text-align: center;
+      color: #007BFF;
+      margin-bottom: 1rem;
+      font-size: 2rem;
+    }
+    .booking-container p {
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #555;
+    }
+
+    /* Form */
+    .booking-form {
+      display: grid;
+      gap: 1.5rem;
+    }
+    .form-field {
+      position: relative;
+    }
+    .booking-form input,
+    .booking-form select,
+    .booking-form textarea {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.3s ease, box-shadow 0.3s ease;
+    }
+    .booking-form input:focus,
+    .booking-form select:focus,
+    .booking-form textarea:focus {
+      border-color: #007BFF;
+      box-shadow: 0 0 6px rgba(0,123,255,0.3);
+      outline: none;
+    }
+
+    textarea { min-height: 120px; }
+
+    /* Submit Button */
+    .submit-btn {
+      background: linear-gradient(90deg, #007BFF, #00C6FF);
+      color: white;
+      padding: 1rem;
+      border: none;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .submit-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 14px rgba(0,123,255,0.4);
+    }
+
+    .form-status {
+      margin-top: 1rem;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Footer */
+    footer {
+      background: #007BFF;
+      color: white;
+      text-align: center;
+      padding: 2rem;
+      margin-top: 3rem;
+    }
+    footer a {
+      color: #E0E0E0;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer a:hover {
+      color: #00C6FF;
+    }
+  </style>
+
+  <!-- EmailJS -->
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+  <!-- Header -->
+  <header>
+    <h1>Team Cleaner Estimate Booking</h1>
+    <p>Fast booking, trusted pros — eco-friendly cleaning in San Francisco</p>
+  </header>
+
+  <!-- Booking Form -->
+  <div class="booking-container">
+    <h2>Schedule Your Estimate</h2>
+    <p>Please fill out the form below and our team will contact you shortly.</p>
+
+    <form id="booking-form" class="booking-form">
+      <input type="text" name="honeypot" style="display:none" />
+
+      <div class="form-field">
+        <input id="name" name="name" required placeholder="Full name" />
+      </div>
+      <div class="form-field">
+        <input id="email" name="email" type="email" required placeholder="Email" />
+      </div>
+      <div class="form-field">
+        <input id="phone" name="phone" required placeholder="Phone number" />
+      </div>
+      <div class="form-field">
+        <select id="service" name="service" required>
+          <option value="">Select a service</option>
+          <option>Residential Cleaning</option>
+          <option>Commercial Cleaning</option>
+          <option>Deep Clean</option>
+          <option>Move In / Move Out</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <textarea id="message" name="message" placeholder="Any additional details..."></textarea>
+      </div>
+
+      <button type="submit" class="submit-btn">Send Request</button>
+      <div class="form-status"></div>
+    </form>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p><strong>Team Cleaners SF</strong></p>
+    <p>Email: <a href="mailto:contact@teamcleanersf.com">contact@teamcleanersf.com</a></p>
+    <p>Phone: <a href="tel:+14153707156">(415) 370-7156</a></p>
+    <p>© <span id="year"></span> Team Cleaners SF</p>
+  </footer>
+
+  <!-- Script -->
+  <script>
+    // Init EmailJS
+    (function () {
+      emailjs.init("DC2LTEnTIrMIaAHAz"); // Your Public Key
+    })();
+
+    const form = document.getElementById("booking-form");
+    const status = document.querySelector(".form-status");
+
+    const spinner = document.createElement("div");
+    spinner.className = "spinner";
+
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      status.innerHTML = "⏳ Sending...";
+      status.style.color = "#333";
+
+      const formData = {
+        name: document.getElementById("name").value,
+        email: document.getElementById("email").value,
+        phone: document.getElementById("phone").value,
+        service: document.getElementById("service").value,
+        message: document.getElementById("message").value,
+      };
+
+      emailjs
+        .send("service_np4kbm4", "template_spt5igj", formData)
+        .then(() => {
+          status.textContent = "✅ Request sent successfully!";
+          status.style.color = "green";
+          form.reset();
+        })
+        .catch((err) => {
+          console.error("EmailJS error:", err);
+          status.textContent = "❌ Something went wrong. Please try again.";
+          status.style.color = "red";
+        });
+    });
+
+    // Dynamic year
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
